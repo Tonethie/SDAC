@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, View, TouchableOpacity, Text, TextInput } from 'react-native';
+import { StyleSheet, Image, View, TouchableOpacity, Text, TextInput, TouchableHighlight } from 'react-native';
 import { Left } from 'native-base';
 import { withOrientation } from 'react-navigation';
 import { ceil } from 'react-native-reanimated';
@@ -27,13 +27,17 @@ export default class Home extends React.Component {
                     <TextInput style={styles.input} placeholder="Seu email" underlineColorAndroid='gray'></TextInput>
                     <Text style={styles.corTexto}>{"\n"}Senha</Text>
                     <TextInput style={styles.input} placeholder="Sua senha" underlineColorAndroid='gray'></TextInput>
-                    <TouchableOpacity style={styles.loginBtn}>
+                    <TouchableHighlight style={styles.loginBtn}>
                         <Text style={styles.loginTxt}>Entrar</Text>
-                    </TouchableOpacity>
+                    </TouchableHighlight>
                 </View>
                 <View style={styles.cadastroContainer}>
-                    <Text style={{color: '#b3bdc4', fontWeight: "bold"}}>Esqueceu a senha?</Text>
-                    <Text style={{marginTop: 40, color: '#f8606b', fontWeight: 'bold'}}>Cadastre-se</Text>
+                    <TouchableHighlight>
+                        <Text style={{color: '#b3bdc4', fontWeight: "bold"}}>Esqueceu a senha?</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={() => this.props.navigation.navigate('SignUp')}>
+                        <Text style={{marginTop: 40, color: '#f8606b', fontWeight: 'bold'}}>Cadastre-se</Text>
+                    </TouchableHighlight>
                 </View>      
             </View>
         );
