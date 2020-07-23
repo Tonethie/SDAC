@@ -1,11 +1,8 @@
 import React from 'react';
 import { StyleSheet, Image, View, TouchableOpacity, Text, TextInput, TouchableHighlight } from 'react-native';
-import { Left } from 'native-base';
-import { withOrientation } from 'react-navigation';
-import { ceil } from 'react-native-reanimated';
 
 /**
- * Home screen
+ * SignIn
  */
 export default class SignIn extends React.Component {
 
@@ -27,7 +24,7 @@ export default class SignIn extends React.Component {
                     <TextInput style={styles.input} placeholder="Seu email" underlineColorAndroid='gray'></TextInput>
                     <Text style={styles.corTexto}>{"\n"}Senha</Text>
                     <TextInput style={styles.input} placeholder="Sua senha" underlineColorAndroid='gray'></TextInput>
-                    <TouchableHighlight style={styles.loginBtn}>
+                    <TouchableHighlight onPress={() => this.props.navigation.navigate('Home')} style={styles.loginBtn}>
                         <Text style={styles.loginTxt}>Entrar</Text>
                     </TouchableHighlight>
                 </View>
