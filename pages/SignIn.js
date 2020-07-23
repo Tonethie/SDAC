@@ -15,10 +15,9 @@ import {ceil} from 'react-native-reanimated';
 /**
  * Home screen
  */
-export default class Home extends React.Component {
+export default class SignIn extends React.Component {
   render() {
     const {navigate} = this.props.navigation;
-
     return (
       <View style={styles.container}>
         <View style={styles.logoContainer}>
