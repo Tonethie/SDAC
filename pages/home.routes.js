@@ -16,7 +16,7 @@ const HomeScreen = ({navigation}) => (
             headerShown: true,
             title: 'Início',
             headerLeft: () => (
-                <Icon.Button name="add" size={25}
+                <Icon.Button name="menu" size={25}
                 backgroundColor="#009387" onPress={() =>{navigation.openDrawer()}}></Icon.Button>
             )
         }} name="Home" component={Home} />
@@ -28,7 +28,7 @@ const ListBTScreen = ({navigation}) => (
             headerShown: true,
             title: 'Lista BT',
             headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25}
+                <Icon.Button name="menu" size={25}
                 backgroundColor="#009387" onPress={() =>{navigation.openDrawer()}}></Icon.Button>
             )
         }} name="ListBT" component={ListBT} />
@@ -40,7 +40,7 @@ const SettingScreen = ({navigation}) => (
             headerShown: true,
             title: 'Configurações',
             headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25}
+                <Icon.Button name="menu" size={25}
                 backgroundColor="#009387" onPress={() =>{navigation.openDrawer()}}></Icon.Button>
             )
         }} name="Settings" component={Settings} />
