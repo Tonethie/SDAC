@@ -8,14 +8,12 @@ import {
   TextInput,
   TouchableHighlight,
 } from 'react-native';
-import {Left} from 'native-base';
-import {withOrientation} from 'react-navigation';
-import {ceil} from 'react-native-reanimated';
 
 /**
- * Home screen
+ * SignIn
  */
 export default class SignIn extends React.Component {
+
   render() {
     const {navigate} = this.props.navigation;
     return (
@@ -40,7 +38,7 @@ export default class SignIn extends React.Component {
             style={styles.input}
             placeholder="Sua senha"
             underlineColorAndroid="gray"></TextInput>
-          <TouchableHighlight style={styles.loginBtn}>
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Home')} style={styles.loginBtn}>
             <Text style={styles.loginTxt}>Entrar</Text>
           </TouchableHighlight>
         </View>
