@@ -7,11 +7,39 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import {ListItem, CheckBox} from 'native-base';
-
+import * as firebase from 'firebase/app';
+import auth from 'firebase/auth';
 /**
  * Profile screen
  */
 export default class SignUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      name: '',
+    };
+  }
+
+  signUpUser = (name, email, password) => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((authenticate) => {
+        /*return authenticate.user
+          .updateProfile({
+            displayName: name,
+          })
+          .then(() => {*/
+        this.props.navigation.navigate('Home');
+        //});
+      })
+      .catch((error1) => {
+        alert(error1.message);
+      });
+  };
+
   render() {
     const {navigate} = this.props.navigation;
 
@@ -23,7 +51,8 @@ export default class SignUp extends React.Component {
           <TextInput
             style={styles.input}
             placeholder="Seu nome"
-            underlineColorAndroid="gray"></TextInput>
+            underlineColorAndroid="gray"
+            onChangeText={(name) => this.setState({name})}></TextInput>
           <Text style={styles.corTexto}>{'\n'}Email</Text>
           <TextInput
             style={styles.input}
@@ -33,17 +62,21 @@ export default class SignUp extends React.Component {
           <TextInput
             style={styles.input}
             placeholder="Seu email"
-            underlineColorAndroid="gray"></TextInput>
+            underlineColorAndroid="gray"
+            onChangeText={(email) => this.setState({email})}></TextInput>
           <Text style={styles.corTexto}>{'\n'}Senha</Text>
           <TextInput
             style={styles.input}
             placeholder="Sua senha"
-            underlineColorAndroid="gray"></TextInput>
+            underlineColorAndroid="gray"
+            secureTextEntry={true}></TextInput>
           <Text style={styles.corTexto}>{'\n'}Confirmar Senha</Text>
           <TextInput
             style={styles.input}
             placeholder="Sua senha"
-            underlineColorAndroid="gray"></TextInput>
+            underlineColorAndroid="gray"
+            secureTextEntry={true}
+            onChangeText={(password) => this.setState({password})}></TextInput>
           <ListItem style={{width: 250, marginBottom: 10}}>
             <CheckBox
               style={{marginRight: 20}}
@@ -58,7 +91,15 @@ export default class SignUp extends React.Component {
               </Text>
             </Text>
           </ListItem>
-          <TouchableHighlight style={styles.loginBtn}>
+          <TouchableHighlight
+            onPress={() => {
+              this.signUpUser(
+                this.state.name,
+                this.state.email,
+                this.state.password,
+              );
+            }}
+            style={styles.loginBtn}>
             <Text style={styles.loginTxt}>Continuar</Text>
           </TouchableHighlight>
         </View>
