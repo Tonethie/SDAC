@@ -16,8 +16,14 @@ const HomeScreen = ({navigation}) => (
         <Stack.Screen options={{
             headerShown: true,
             title: 'Início',
+            headerTitleStyle:{
+                color: '#334048',
+                fontSize: 20,
+                fontWeight: 'bold',
+            },
             headerLeft: () => (
                 <Icon name="menu-outline" size={25}
+                color={'#f8606b'}
                 onPress={() =>{navigation.openDrawer()}}></Icon>
             )
         }} name="Home" component={Home} />
@@ -30,6 +36,7 @@ const ListBTScreen = ({navigation}) => (
             title: 'Lista BT',
             headerLeft: () => (
                 <Icon name="menu-outline" size={25}
+                color={'#f8606b'}
                 onPress={() =>{navigation.openDrawer()}}></Icon>
             )
         }} name="ListBT" component={ListBT} />
@@ -42,6 +49,7 @@ const SettingScreen = ({navigation}) => (
             title: 'Configurações',
             headerLeft: () => (
                 <Icon name="menu-outline" size={25}
+                color={'#f8606b'}
                 onPress={() =>{navigation.openDrawer()}}></Icon>
             )
         }} name="Settings" component={Settings} />

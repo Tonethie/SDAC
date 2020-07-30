@@ -37,6 +37,7 @@ export default class SignIn extends React.Component {
           <TextInput
             style={styles.input}
             placeholder="Sua senha"
+            secureTextEntry={true}
             underlineColorAndroid="gray"></TextInput>
           <TouchableHighlight onPress={() => this.props.navigation.navigate('Home')} style={styles.loginBtn}>
             <Text style={styles.loginTxt}>Entrar</Text>
