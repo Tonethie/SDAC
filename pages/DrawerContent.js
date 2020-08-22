@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet} from 'react-native';
 import {
     Avatar,
@@ -15,6 +15,9 @@ import {
     DrawerItem
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as firebase from 'firebase/app';
+import auth from 'firebase/auth';
+import { set } from 'react-native-reanimated';
 
 export function DrawerContent(props){
 
@@ -23,6 +26,32 @@ export function DrawerContent(props){
     const toggleTheme = () => {
         setIsDarkTheme(!isDarkTheme);
     }
+
+    const [email, setEmail] = useState(0);
+    const [name, setName] = useState(0);
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(authenticate => {
+            if(authenticate){
+                authenticate
+                ? setEmail(authenticate.email)
+                : setEmail(null);
+            }else{
+                this.props.navigation.navigate('SignIn');
+            }
+        });
+    });
+
+    signOutUser = () => {
+        firebase
+          .auth()
+          .signOut()
+          .then(() => {
+            props.navigation.navigate('SignIn');
+          })
+          .catch((error) => alert(error.message));
+      };
+    
 
     return(
         <View style={{flex:1}}>
@@ -38,7 +67,7 @@ export function DrawerContent(props){
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
                                 <Title style={styles.title}>Avatar Aang</Title>
-                                <Caption style={styles.caption}>Last Airbender</Caption>
+                                <Caption style={styles.caption}>{email}</Caption>
                             </View>
                         </View>
                         <View style={styles.row}>
@@ -127,7 +156,7 @@ export function DrawerContent(props){
                         />
                     )}
                     label="Sair"
-                    onPress={() => {}}
+                    onPress={() => {signOutUser();}}
                 />
             </Drawer.Section>
         </View>
