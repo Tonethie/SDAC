@@ -8,11 +8,31 @@ import {
   TextInput,
   TouchableHighlight,
 } from 'react-native';
-
+import * as firebase from 'firebase/app';
+import auth from 'firebase/auth';
 /**
  * SignIn
  */
 export default class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+    };
+  }
+
+  signInUser = (email, password) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((authenticate) => {
+        this.props.navigation.navigate('Home');
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
 
   render() {
     const {navigate} = this.props.navigation;
@@ -32,14 +52,20 @@ export default class SignIn extends React.Component {
           <TextInput
             style={styles.input}
             placeholder="Seu email"
-            underlineColorAndroid="gray"></TextInput>
+            underlineColorAndroid="gray"
+            onChangeText={(email) => this.setState({email})}></TextInput>
           <Text style={styles.corTexto}>{'\n'}Senha</Text>
           <TextInput
             style={styles.input}
             placeholder="Sua senha"
             secureTextEntry={true}
-            underlineColorAndroid="gray"></TextInput>
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('Home')} style={styles.loginBtn}>
+            underlineColorAndroid="gray"
+            onChangeText={(password) => this.setState({password})}></TextInput>
+          <TouchableHighlight
+            onPress={() => {
+              this.signInUser(this.state.email, this.state.password);
+            }}
+            style={styles.loginBtn}>
             <Text style={styles.loginTxt}>Entrar</Text>
           </TouchableHighlight>
         </View>
