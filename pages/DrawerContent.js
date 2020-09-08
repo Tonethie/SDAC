@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
 
 import {
   Avatar,
@@ -23,138 +23,125 @@ export function DrawerContent(props) {
     setIsDarkTheme(!isDarkTheme);
   };
 
-    const [email, setEmail] = useState(0);
-    const [name, setName] = useState(0);
+  const [email, setEmail] = useState(0);
+  const [name, setName] = useState(0);
 
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged(authenticate => {
-            if(authenticate){
-                authenticate
-                ? setEmail(authenticate.email)
-                : setEmail(null);
-            }else{
-                this.props.navigation.navigate('SignIn');
-            }
-        });
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((authenticate) => {
+      if (authenticate) {
+        authenticate ? setEmail(authenticate.email) : setEmail(null);
+      } else {
+        props.navigation.navigate('SignIn');
+      }
     });
+  });
 
-    signOutUser = () => {
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            props.navigation.navigate('SignIn');
-          })
-          .catch((error) => alert(error.message));
-      };
-    
+  signOutUser = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        props.navigation.navigate('SignIn');
+      })
+      .catch((error) => alert(error.message));
+  };
 
-    return(
-        <View style={{flex:1}}>
-            <DrawerContentScrollView {...props}>
-                <View style={styles.drawerContent}>
-                    <View style={styles.userInfoSection}>
-                        <View style={{flexDirection:'row', marginTop: 15}}>
-                            <Avatar.Image
-                                source={{
-                                    uri: 'https://http2.mlstatic.com/camiseta-personalizada-desenho-anime-avatar-D_NQ_NP_6167-MLB5032845448_092013-F.jpg'
-                                }}
-                                size={75}
-                            />
-                            <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>Avatar Aang</Title>
-                                <Caption style={styles.caption}>{email}</Caption>
-                            </View>
-                        </View>
-                        <View style={styles.row}>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
-                                <Caption style={styles.caption}>Device Sync</Caption>
-                            </View>
-                        </View>
-                    </View>
-                    <Drawer.Section style={styles.drawerSection}>
-                        <DrawerItem
-                            icon={({color,size}) =>(
-                                <Icon
-                                name="home-outline"
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Início"
-                            onPress={() => {props.navigation.navigate('Home')}}
-                        />
-                        <DrawerItem
-                            icon={({color,size}) =>(
-                                <Icon
-                                name="book-outline"
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Lista BT"
-                            onPress={() => {props.navigation.navigate('ListBT')}}
-                        />
-                        <DrawerItem
-                            icon={({color,size}) =>(
-                                <Icon
-                                name="account-outline"
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Perfil"
-                            onPress={() => {}}
-                        />
-                        <DrawerItem
-                            icon={({color,size}) =>(
-                                <Icon
-                                name="cellphone-settings"
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Configurações"
-                            onPress={() => {props.navigation.navigate('Settings')}}
-                        />
-                        <DrawerItem
-                            icon={({color,size}) =>(
-                                <Icon
-                                name="account-check-outline"
-                                color={color}
-                                size={size}
-                                />
-                            )}
-                            label="Suporte"
-                            onPress={() => {}}
-                        />
-                    </Drawer.Section>
-                    <Drawer.Section title="Preferência">
-                        <TouchableRipple onPress={() => {toggleTheme()}}>
-                            <View style={styles.preference}>
-                                <Text>Dark Theme</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={isDarkTheme} />
-                                </View>
-                            </View>
-                        </TouchableRipple>
-                    </Drawer.Section>
+  return (
+    <View style={{flex: 1}}>
+      <DrawerContentScrollView {...props}>
+        <View style={styles.drawerContent}>
+          <View style={styles.userInfoSection}>
+            <View style={{flexDirection: 'row', marginTop: 15}}>
+              <Avatar.Image
+                source={{
+                  uri:
+                    'https://http2.mlstatic.com/camiseta-personalizada-desenho-anime-avatar-D_NQ_NP_6167-MLB5032845448_092013-F.jpg',
+                }}
+                size={75}
+              />
+              <View style={{marginLeft: 15, flexDirection: 'column'}}>
+                <Title style={styles.title}>NULL</Title>
+                <Caption style={styles.caption}>{email}</Caption>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.section}>
+                <Paragraph style={[styles.paragraph, styles.caption]}>
+                  80
+                </Paragraph>
+                <Caption style={styles.caption}>Device Sync</Caption>
+              </View>
+            </View>
+          </View>
+          <Drawer.Section style={styles.drawerSection}>
+            <DrawerItem
+              icon={({color, size}) => (
+                <Icon name="home-outline" color={color} size={size} />
+              )}
+              label="Início"
+              onPress={() => {
+                props.navigation.navigate('Home');
+              }}
+            />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Icon name="book-outline" color={color} size={size} />
+              )}
+              label="Lista BT"
+              onPress={() => {
+                props.navigation.navigate('ListBT');
+              }}
+            />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Icon name="account-outline" color={color} size={size} />
+              )}
+              label="Perfil"
+              onPress={() => {}}
+            />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Icon name="cellphone-settings" color={color} size={size} />
+              )}
+              label="Configurações"
+              onPress={() => {
+                props.navigation.navigate('Settings');
+              }}
+            />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Icon name="account-check-outline" color={color} size={size} />
+              )}
+              label="Suporte"
+              onPress={() => {}}
+            />
+          </Drawer.Section>
+          <Drawer.Section title="Preferência">
+            <TouchableRipple
+              onPress={() => {
+                toggleTheme();
+              }}>
+              <View style={styles.preference}>
+                <Text>Dark Theme</Text>
+                <View pointerEvents="none">
+                  <Switch value={isDarkTheme} />
                 </View>
-            </DrawerContentScrollView>
-            <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem
-                    icon={({color,size}) =>(
-                        <Icon
-                        name="exit-to-app"
-                        color={color}
-                        size={size}
-                        />
-                    )}
-                    label="Sair"
-                    onPress={() => {signOutUser();}}
-                />
-            </Drawer.Section>
+              </View>
+            </TouchableRipple>
+          </Drawer.Section>
+        </View>
+      </DrawerContentScrollView>
+      <Drawer.Section style={styles.bottomDrawerSection}>
+        <DrawerItem
+          icon={({color, size}) => (
+            <Icon name="exit-to-app" color={color} size={size} />
+          )}
+          label="Sair"
+          onPress={() => {
+            signOutUser();
+          }}
+        />
+      </Drawer.Section>
     </View>
   );
 }

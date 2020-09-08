@@ -1444,6 +1444,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/toolbar-android/-/toolbar-android-0.1.0-rc.2.tgz#86cae655836afacc52d4063062cc59837d1a8640"
   integrity sha512-UCblqsitOcoYxVc6QzcaqCKogeRnePPMw7cbGvW5GI/GXIwQel8Kge9d910W3MUPUzw3pFzhIZVug6U3W067Pg==
 
+"@react-native-firebase/database@^7.5.5":
+  version "7.5.5"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/database/-/database-7.5.5.tgz#92b62ef02223b47f83786d15dcfd89922d6dd01a"
+  integrity sha512-zpqvY9g/3xyG+aruOcPuVa4S+g0g5rzalfv0cBQxc4id+CkH1JawkYQRahDrLuUVf9nF/QqADCQT3k5KG/aDPg==
+
 "@react-navigation/core@^3.7.6":
   version "3.7.6"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.7.6.tgz#e0244fcdc22937825b252197f70308bbe5709c58"

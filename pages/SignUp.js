@@ -5,10 +5,12 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
+  CheckBox,
 } from 'react-native';
-import {ListItem, CheckBox} from 'native-base';
+import {ListItem} from 'native-base';
 import * as firebase from 'firebase/app';
 import auth from 'firebase/auth';
+import database from 'firebase/database';
 /**
  * Profile screen
  */
@@ -19,30 +21,54 @@ export default class SignUp extends React.Component {
       email: '',
       password: '',
       name: '',
+      confirmemail: '',
+      confirmpassword: '',
     };
   }
 
-  signUpUser = (name, email, password) => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((authenticate) => {
-        /*return authenticate.user
-          .updateProfile({
-            displayName: name,
-          })
-          .then(() => {*/
-        this.props.navigation.navigate('Home');
-        //});
-      })
-      .catch((error1) => {
-        alert(error1.message);
-      });
+  signUpUser = (
+    name,
+    email,
+    password,
+    confirmemail,
+    confirmpassword,
+    checked,
+  ) => {
+    if (email != confirmemail) {
+      alert('Os emails digitados não combinam.');
+      return;
+    } else if (password != confirmpassword) {
+      alert('As senhas digitadas não combinam.');
+      return;
+    } else if (checked != true) {
+      alert(
+        'Você deve aceitar os Termos de Serviços e a Política de Privacidade.',
+      );
+      return;
+    } else {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((authenticate) => {
+          this.props.navigation.navigate('Home');
+          firebase
+            .database()
+            .ref('/users/' + firebase.auth().currentUser.uid)
+            .set({
+              uid: firebase.auth().currentUser.uid,
+              nome: name,
+              email1: confirmemail,
+            })
+            .then(() => console.log('Data set.'));
+        })
+        .catch((error1) => {
+          alert(error1.message);
+        });
+    }
   };
 
   render() {
     const {navigate} = this.props.navigation;
-
     return (
       <View style={styles.container}>
         <View style={styles.campos}>
@@ -57,31 +83,38 @@ export default class SignUp extends React.Component {
           <TextInput
             style={styles.input}
             placeholder="Seu email"
-            underlineColorAndroid="gray"></TextInput>
+            underlineColorAndroid="gray"
+            onChangeText={(email) => this.setState({email})}></TextInput>
           <Text style={styles.corTexto}>{'\n'}Confirmar Email</Text>
           <TextInput
             style={styles.input}
             placeholder="Seu email"
             underlineColorAndroid="gray"
-            onChangeText={(email) => this.setState({email})}></TextInput>
+            onChangeText={(confirmemail) =>
+              this.setState({confirmemail})
+            }></TextInput>
           <Text style={styles.corTexto}>{'\n'}Senha</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Sua senha"
-            underlineColorAndroid="gray"
-            secureTextEntry={true}></TextInput>
-          <Text style={styles.corTexto}>{'\n'}Confirmar Senha</Text>
           <TextInput
             style={styles.input}
             placeholder="Sua senha"
             underlineColorAndroid="gray"
             secureTextEntry={true}
             onChangeText={(password) => this.setState({password})}></TextInput>
+          <Text style={styles.corTexto}>{'\n'}Confirmar Senha</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Sua senha"
+            underlineColorAndroid="gray"
+            secureTextEntry={true}
+            onChangeText={(confirmpassword) =>
+              this.setState({confirmpassword})
+            }></TextInput>
           <ListItem style={{width: 250, marginBottom: 10}}>
             <CheckBox
-              style={{marginRight: 20}}
-              color="#f8606b"
-              checked={false}
+              value={this.state.checked}
+              onValueChange={() =>
+                this.setState({checked: !this.state.checked})
+              }
             />
             <Text style={{color: '#334048', fontWeight: 'bold', fontSize: 12}}>
               Eu concordo com os
@@ -97,6 +130,9 @@ export default class SignUp extends React.Component {
                 this.state.name,
                 this.state.email,
                 this.state.password,
+                this.state.confirmemail,
+                this.state.confirmpassword,
+                this.state.checked,
               );
             }}
             style={styles.loginBtn}>
@@ -105,7 +141,15 @@ export default class SignUp extends React.Component {
         </View>
         <View style={styles.temContaContainer}>
           <Text style={{color: '#b3bdc4', fontWeight: 'bold', fontSize: 12}}>
-            Tem uma conta? <Text style={styles.corTermos}> Logar</Text>
+            Tem uma conta?{' '}
+            <Text
+              style={styles.corTermos}
+              onPress={() => {
+                this.props.navigation.navigate('SignIn');
+              }}>
+              {' '}
+              Logar
+            </Text>
           </Text>
         </View>
       </View>

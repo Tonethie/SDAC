@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import Routes from './pages/routes';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import * as firebase from 'firebase/app';
 
 var firebaseConfig = {
