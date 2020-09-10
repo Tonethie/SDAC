@@ -3,16 +3,58 @@ import { StyleSheet, Alert, View, TouchableOpacity, Text, Linking  } from 'react
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { RNCamera } from "react-native-camera";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import * as firebase from 'firebase/app';
+import auth from 'firebase/auth';
+import database from 'firebase/database';
 /**
  * Home screen
  */
 
 
 export default class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          btid: '',
+          btpassword: '',
+        };
+      }
+    
+      saveDataFirebase = (btid, btpassword) => {
+        firebase
+          .database()
+          .ref('/users/' + firebase.auth().currentUser.uid + '/bt_data')
+          .push({
+            nomebt: btid,
+            senhabt: btpassword,
+          })
+          .then(() => this.props.navigation.navigate('ListBT'));
+      };
+
     ifScanned = e => {
-        Linking.openURL(e.data).catch(err =>
-            Alert.alert("QRCode inválido", e.data));
+        var dados = (e.data);
+        var separador = dados.split(" ");
+        var btid = separador[0];
+        var btpassword = separador[1];
+        this.setState({btid: btid});
+        this.setState({btpassword: btpassword});
+
+        Alert.alert("Bluetooth Encontrado", "Deseja adicionar o bluetooth: " + btid + " em sua lista?",
+        [
+            {
+                text: "Adicionar",
+                onPress: () => this.saveDataFirebase(this.state.btid, this.state.btpassword)
+            },
+            {
+                text:"Cancelar",
+                onPress: () => console.log("Cancelado"),
+                style: "cancel"
+            }
+        ],
+        );
+        
+        /*Linking.openURL(e.data).catch(err =>
+            Alert.alert("QRCode inválido", e.data));*/
     }
 
     render(){
@@ -24,7 +66,7 @@ export default class Home extends React.Component {
                 <QRCodeScanner
                     onRead={this.ifScanned}
                     size={10}
-                    flashMode={RNCamera.Constants.FlashMode.torch}
+                    flashMode={RNCamera.Constants.FlashMode.off}
                     reactivate={true}
                     permissionDialogMessage="Permissão para acessar a câmera"
                     reactivateTimeout={10}
