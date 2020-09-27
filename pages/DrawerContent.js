@@ -30,6 +30,7 @@ export function DrawerContent(props) {
     firebase.auth().onAuthStateChanged((authenticate) => {
       if (authenticate) {
         authenticate ? setEmail(authenticate.email) : setEmail(null);
+        authenticate ? setName(firebase.auth().currentUser.uid) : setName(null);
       } else {
         props.navigation.navigate('SignIn');
       }
@@ -54,20 +55,19 @@ export function DrawerContent(props) {
             <View style={{flexDirection: 'row', marginTop: 15}}>
               <Avatar.Image
                 source={{
-                  uri:
-                    'https://http2.mlstatic.com/camiseta-personalizada-desenho-anime-avatar-D_NQ_NP_6167-MLB5032845448_092013-F.jpg',
+                  uri: 'https://i.stack.imgur.com/l60Hf.png',
                 }}
                 size={75}
               />
               <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                <Title style={styles.title}>NULL</Title>
+                <Title style={styles.title}>{name}</Title>
                 <Caption style={styles.caption}>{email}</Caption>
               </View>
             </View>
             <View style={styles.row}>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  80
+                  X
                 </Paragraph>
                 <Caption style={styles.caption}>Device Sync</Caption>
               </View>

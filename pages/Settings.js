@@ -17,9 +17,6 @@ export default class Settings extends React.Component {
     super(props);
     this.state = {
       ssid: '',
-      mode: '',
-      sectype: '',
-      secopt: '',
       wifipassword: '',
     };
   }
@@ -30,9 +27,6 @@ export default class Settings extends React.Component {
       .ref('/users/' + firebase.auth().currentUser.uid + '/wifi_data')
       .set({
         nomewifi: ssid,
-        //modo: mode,
-        //tiposeg: sectype,
-        //opcsec: secopt,
         senhawifi: wifipassword,
       })
       .then(() => this.props.navigation.navigate('Home'));
@@ -48,33 +42,6 @@ export default class Settings extends React.Component {
             placeholder="Nome do WiFi"
             underlineColorAndroid="gray"
             onChangeText={(ssid) => this.setState({ssid})}></TextInput>
-          <Text style={styles.corTexto}>Mode</Text>
-          <Picker
-            style={{height: 50, width: 300}}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedValue(itemValue)
-            }>
-            <Picker.Item label="54Mbps(802.11g)" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
-          <Text style={styles.corTexto}>Tipo de Segurança</Text>
-          <Picker
-            style={{height: 50, width: 300}}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedValue(itemValue)
-            }>
-            <Picker.Item label="WEP" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
-          <Text style={styles.corTexto}>Opções de Segurança</Text>
-          <Picker
-            style={{height: 50, width: 300}}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedValue(itemValue)
-            }>
-            <Picker.Item label="Automática" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
           <Text style={styles.corTexto}>Senha</Text>
           <TextInput
             style={styles.input}
@@ -93,10 +60,11 @@ export default class Settings extends React.Component {
           </TouchableHighlight>
         </View>
         <View style={styles.cadastroContainer}>
-          <TouchableHighlight>
-            <Text style={{marginTop: 40, color: '#f8606b', fontWeight: 'bold'}}>
-              Cancelar
-            </Text>
+          <TouchableHighlight
+            onPress={() => {
+              this.props.navigation.navigate('Home');
+            }}>
+            <Text style={{color: '#f8606b', fontWeight: 'bold'}}>Cancelar</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -135,7 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     justifyContent: 'center',
     backgroundColor: '#f8606b',
-    marginTop: 40,
+    marginTop: 20,
   },
   loginTxt: {
     color: 'white',
@@ -145,6 +113,6 @@ const styles = StyleSheet.create({
   cadastroContainer: {
     alignContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 15,
   },
 });
