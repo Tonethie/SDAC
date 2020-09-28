@@ -49,7 +49,7 @@ export default class ListBT extends React.Component {
               <Card
                 key={index}
                 onPress={() =>
-                  Alert.alert('Configurar Wifi - Nome Bluetooth?')
+                  Alert.alert('Configurar Wifi - ' + item.nome + '?')
                 }>
                 <Card.Content
                   style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -94,7 +94,7 @@ export default class ListBT extends React.Component {
           return (
             <Card
               key={index}
-              onPress={() => Alert.alert('Configurar Wifi - Nome Bluetooth?')}>
+              onPress={() => Alert.alert('Configurar Wifi - ' + item.nome + '?')}>
               <Card.Content
                 style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
