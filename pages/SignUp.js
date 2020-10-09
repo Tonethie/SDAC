@@ -51,13 +51,17 @@ export default class SignUp extends React.Component {
         .createUserWithEmailAndPassword(email, password)
         .then((authenticate) => {
           this.props.navigation.navigate('Home');
+          const update = {
+            displayName: name,
+          };
+          firebase.auth().currentUser.updateProfile(update);
           firebase
             .database()
             .ref('/users/' + firebase.auth().currentUser.uid)
             .set({
-              uid: firebase.auth().currentUser.uid,
-              nome: name,
-              email1: confirmemail,
+              usrUid: firebase.auth().currentUser.uid,
+              usrName: name,
+              usrEmail: confirmemail,
             })
             .then(() => console.log('Data set.'));
         })

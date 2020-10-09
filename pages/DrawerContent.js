@@ -30,7 +30,9 @@ export function DrawerContent(props) {
     firebase.auth().onAuthStateChanged((authenticate) => {
       if (authenticate) {
         authenticate ? setEmail(authenticate.email) : setEmail(null);
-        authenticate ? setName(firebase.auth().currentUser.uid) : setName(null);
+        authenticate
+          ? setName(firebase.auth().currentUser.displayName)
+          : setName(null);
       } else {
         props.navigation.navigate('SignIn');
       }
