@@ -26,6 +26,13 @@ export function DrawerContent(props) {
   const [email, setEmail] = useState(0);
   const [name, setName] = useState(0);
 
+  const countFilhos = firebase
+    .database()
+    .ref('/users/' + firebase.auth().currentUser.uid);
+  countFilhos.child('bt_data').on('value', (snapShot) => {
+    countChild = snapShot.numChildren();
+  });
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged((authenticate) => {
       if (authenticate) {
@@ -69,7 +76,7 @@ export function DrawerContent(props) {
             <View style={styles.row}>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  X
+                  {countChild}
                 </Paragraph>
                 <Caption style={styles.caption}>Device Sync</Caption>
               </View>
