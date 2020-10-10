@@ -25,13 +25,20 @@ export function DrawerContent(props) {
 
   const [email, setEmail] = useState(0);
   const [name, setName] = useState(0);
+  const [child, setChild] = useState(0);
 
   const countFilhos = firebase
     .database()
-    .ref('/users/' + firebase.auth().currentUser.uid);
-  countFilhos.child('bt_data').on('value', (snapShot) => {
-    countChild = snapShot.numChildren();
-  });
+    .ref('/users/' + firebase.auth().currentUser.uid + '/bt_data');
+
+  function readDeviceNum(){
+    countFilhos.once("value")
+    .then(function(snapshot){
+      var filho = snapshot.numChildren();
+      setChild(filho)
+    });
+    return child 
+  };
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((authenticate) => {
@@ -76,7 +83,7 @@ export function DrawerContent(props) {
             <View style={styles.row}>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  {countChild}
+                  {readDeviceNum()}
                 </Paragraph>
                 <Caption style={styles.caption}>Device Sync</Caption>
               </View>
@@ -103,13 +110,6 @@ export function DrawerContent(props) {
             />
             <DrawerItem
               icon={({color, size}) => (
-                <Icon name="account-outline" color={color} size={size} />
-              )}
-              label="Perfil"
-              onPress={() => {}}
-            />
-            <DrawerItem
-              icon={({color, size}) => (
                 <Icon name="cellphone-settings" color={color} size={size} />
               )}
               label="Configurações"
@@ -124,19 +124,6 @@ export function DrawerContent(props) {
               label="Suporte"
               onPress={() => {}}
             />
-          </Drawer.Section>
-          <Drawer.Section title="Preferência">
-            <TouchableRipple
-              onPress={() => {
-                toggleTheme();
-              }}>
-              <View style={styles.preference}>
-                <Text>Dark Theme</Text>
-                <View pointerEvents="none">
-                  <Switch value={isDarkTheme} />
-                </View>
-              </View>
-            </TouchableRipple>
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
