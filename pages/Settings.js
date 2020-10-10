@@ -28,7 +28,7 @@ export default class Settings extends React.Component {
       .set({
         nomewifi: ssid,
         senhawifi: wifipassword,
-      })
+      }).catch((error) => alert(error.message))
       .then(() => this.props.navigation.navigate('Home'));
   };
 
