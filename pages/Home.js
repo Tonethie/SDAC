@@ -27,31 +27,39 @@ export default class Home extends React.Component {
           .push({
             nomebt: btid,
             senhabt: btpassword,
+          }).catch((error) => {
+            alert(error.message);
           })
           .then(() => this.props.navigation.navigate('ListBT'));
       };
 
     ifScanned = e => {
         var dados = (e.data);
-        var separador = dados.split(" ");
-        var btid = separador[0];
-        var btpassword = separador[1];
-        this.setState({btid: btid});
-        this.setState({btpassword: btpassword});
+        var separador = dados.split(" ", 2);
+        if ((separador.length != 2) || !(dados.includes(" "))) {
+            Alert.alert("Código inválido!")
+        }else{
 
-        Alert.alert("Bluetooth Encontrado", "Deseja adicionar o bluetooth: " + btid + " em sua lista?",
-        [
-            {
-                text: "Adicionar",
-                onPress: () => this.saveDataFirebase(this.state.btid, this.state.btpassword)
-            },
-            {
-                text:"Cancelar",
-                onPress: () => console.log("Cancelado"),
-                style: "cancel"
-            }
-        ],
-        );
+            var btid = separador[0];
+            var btpassword = separador[1];
+            this.setState({btid: btid});
+            this.setState({btpassword: btpassword});
+    
+            Alert.alert("Bluetooth Encontrado", "Deseja adicionar o bluetooth: " + btid + " em sua lista?",
+            [
+                {
+                    text: "Adicionar",
+                    onPress: () => this.saveDataFirebase(this.state.btid, this.state.btpassword)
+                },
+                {
+                    text:"Cancelar",
+                    onPress: () => console.log("Cancelado"),
+                    style: "cancel"
+                }
+            ],
+            );
+        }
+        
         
         /*Linking.openURL(e.data).catch(err =>
             Alert.alert("QRCode inválido", e.data));*/
