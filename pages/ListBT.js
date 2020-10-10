@@ -37,7 +37,7 @@ export default class ListBT extends React.Component {
     let btRem = firebase
       .database()
       .ref('/users/' + firebase.auth().currentUser.uid + '/bt_data/' + key);
-    btRem.remove();
+    btRem.remove().catch((error) => alert(error.message));
   }
 
   render() {
