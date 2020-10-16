@@ -3,10 +3,12 @@ import {
   StyleSheet,
   Image,
   View,
-  Picker,
+  AsyncStorage,
   Text,
   TextInput,
   TouchableHighlight,
+  Alert,
+  Keyboard,
 } from 'react-native';
 import * as firebase from 'firebase/app';
 import auth from 'firebase/auth';
@@ -21,6 +23,17 @@ export default class Settings extends React.Component {
     };
   }
 
+  saveInfo = async () => {
+    try{
+      await AsyncStorage.setItem("wifidata", JSON.stringify({wifi: this.state.ssid, pwd: this.state.wifipassword}));
+      Keyboard.dismiss();
+      Alert.alert("Sucesso", "Dado salvo com sucesso!");
+    }catch(e){
+      alert(e);
+    }
+  }
+
+
   saveDataFirebase = (ssid, wifipassword) => {
     firebase
       .database()
@@ -29,7 +42,9 @@ export default class Settings extends React.Component {
         nomewifi: ssid,
         senhawifi: wifipassword,
       }).catch((error) => alert(error.message))
-      .then(() => this.props.navigation.navigate('Home'));
+      .then(() => {
+        this.saveInfo();
+      });
   };
 
   render() {
