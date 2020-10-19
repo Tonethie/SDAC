@@ -1,10 +1,12 @@
 import React from 'react';
-import {Alert, Image, View, Text} from 'react-native';
+import {Alert, Image, AsyncStorage ,View, Text} from 'react-native';
 import {Card, Title, Paragraph, Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as firebase from 'firebase/app';
 import auth from 'firebase/auth';
 import database from 'firebase/database';
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
+import { connect} from 'react-native-bluetooth-serial-next';
 
 export default class ListBT extends React.Component {
   constructor(props) {
@@ -15,6 +17,7 @@ export default class ListBT extends React.Component {
 
     this.state = {
       items: [],
+      mac: '',
     };
   }
   componentDidMount() {
@@ -28,6 +31,7 @@ export default class ListBT extends React.Component {
         items.push({
           key: childSnap.key,
           nome: childSnap.val().nomebt,
+          mac: childSnap.val().mac,
         });
       });
       this.setState({items: items});
@@ -40,6 +44,20 @@ export default class ListBT extends React.Component {
     btRem.remove().catch((error) => alert(error.message));
   }
 
+  conectarBluetooth = async() =>{
+    //alert(this.state.mac)
+    const tvDevice = BluetoothSerial.device(this.state.mac);
+    await tvDevice.connect();
+    const conectado =  await BluetoothSerial.isConnected();
+    alert(conectado);
+    if (conectado) {
+      await tvDevice.read((data, subscription) => {
+        let ReadSubscription = subscription;
+        console.log("Data: ", data)
+      });
+    }
+  }
+
   render() {
     return (
       <View>
@@ -49,7 +67,20 @@ export default class ListBT extends React.Component {
               <Card
                 key={index}
                 onPress={() =>
-                  Alert.alert('Configurar Wifi - ' + item.nome + '?')
+                  Alert.alert('Configurar',
+                  'Configurar Wifi - ' + item.nome + '?',
+                  [
+                    {
+                      text: 'Sim',
+                      onPress: () => {this.setState({mac: item.mac}); this.conectarBluetooth();}
+                    },
+                    {
+                      text: 'Cancelar',
+                      onPress: () => console.log('Cancelado'),
+                      style: 'cancel',
+                    },
+                  ],
+                  )
                 }>
                 <Card.Content
                   style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -94,7 +125,22 @@ export default class ListBT extends React.Component {
           return (
             <Card
               key={index}
-              onPress={() => Alert.alert('Configurar Wifi - ' + item.nome + '?')}>
+              onPress={() =>
+                Alert.alert('Configurar',
+                'Configurar Wifi - ' + item.nome + '?',
+                [
+                  {
+                    text: 'Sim',
+                    onPress: () => {this.setState({mac: item.mac}); this.conectarBluetooth();},
+                  },
+                  {
+                    text: 'Cancelar',
+                    onPress: () => console.log('Cancelado'),
+                    style: 'cancel',
+                  },
+                ],
+                )
+              }>
               <Card.Content
                 style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
