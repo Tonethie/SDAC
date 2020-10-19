@@ -17,16 +17,18 @@ export default class Home extends React.Component {
         this.state = {
           btid: '',
           btpassword: '',
+          btmac:'',
         };
       }
     
-      saveDataFirebase = (btid, btpassword) => {
+      saveDataFirebase = (btid, btpassword, btmac) => {
         firebase
           .database()
           .ref('/users/' + firebase.auth().currentUser.uid + '/bt_data')
           .push({
             nomebt: btid,
             senhabt: btpassword,
+            mac: btmac,
           }).catch((error) => {
             alert(error.message);
           })
@@ -35,21 +37,23 @@ export default class Home extends React.Component {
 
     ifScanned = e => {
         var dados = (e.data);
-        var separador = dados.split(" ", 2);
-        if ((separador.length != 2) || !(dados.includes(" "))) {
+        var separador = dados.split(" ", 3);
+        if ((separador.length != 3) || !(dados.includes(" "))) {
             Alert.alert("Código inválido!")
         }else{
 
             var btid = separador[0];
             var btpassword = separador[1];
+            var btmac = separador[2];
             this.setState({btid: btid});
             this.setState({btpassword: btpassword});
+            this.setState({btmac: btmac});
     
             Alert.alert("Bluetooth Encontrado", "Deseja adicionar o bluetooth: " + btid + " em sua lista?",
             [
                 {
                     text: "Adicionar",
-                    onPress: () => this.saveDataFirebase(this.state.btid, this.state.btpassword)
+                    onPress: () => this.saveDataFirebase(this.state.btid, this.state.btpassword, this.state.btmac)
                 },
                 {
                     text:"Cancelar",
