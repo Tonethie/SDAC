@@ -6,6 +6,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as firebase from 'firebase/app';
 import auth from 'firebase/auth';
 import database from 'firebase/database';
+import BluetoothSerial from 'react-native-bluetooth-serial-next'
+
+var SendIntentAndroid = require("react-native-send-intent");
 /**
  * Home screen
  */
@@ -21,19 +24,42 @@ export default class Home extends React.Component {
         };
       }
     
-      saveDataFirebase = (btid, btpassword, btmac) => {
-        firebase
-          .database()
-          .ref('/users/' + firebase.auth().currentUser.uid + '/bt_data')
-          .push({
-            nomebt: btid,
-            senhabt: btpassword,
-            mac: btmac,
-          }).catch((error) => {
-            alert(error.message);
-          })
-          .then(() => this.props.navigation.navigate('ListBT'));
-      };
+    saveDataFirebase = (btid, btpassword, btmac) => {
+    firebase
+        .database()
+        .ref('/users/' + firebase.auth().currentUser.uid + '/bt_data')
+        .push({
+        nomebt: btid,
+        senhabt: btpassword,
+        mac: btmac,
+        }).catch((error) => {
+        alert(error.message);
+        })
+        .then(() => this.props.navigation.navigate('ListBT'));
+    };
+
+    onShare = async () =>{
+    try{     
+        await BluetoothSerial.pairDevice(this.state.btmac);
+        setTimeout(this.SendWFDados, 10000)
+    }catch(error){
+        alert(error.message);
+    }
+    };
+
+    [{"ssid":"nomeWiFi", "pwd": "senhaWiFi"}]
+
+    SendWFDados = async () =>{
+    try{
+        SendIntentAndroid.sendText({
+            text: "wifiDados",
+            type: SendIntentAndroid.TEXT_JSON,
+        })
+        (Alert.alert("Configuração enviada."));
+    }catch(error){
+        //
+    }
+    };
 
     ifScanned = e => {
         var dados = (e.data);
@@ -53,7 +79,7 @@ export default class Home extends React.Component {
             [
                 {
                     text: "Adicionar",
-                    onPress: () => this.saveDataFirebase(this.state.btid, this.state.btpassword, this.state.btmac)
+                    onPress: () => {this.onShare(); this.saveDataFirebase(this.state.btid, this.state.btpassword, this.state.btmac)}
                 },
                 {
                     text:"Cancelar",
@@ -64,9 +90,6 @@ export default class Home extends React.Component {
             );
         }
         
-        
-        /*Linking.openURL(e.data).catch(err =>
-            Alert.alert("QRCode inválido", e.data));*/
     }
 
     render(){
@@ -81,7 +104,7 @@ export default class Home extends React.Component {
                     flashMode={RNCamera.Constants.FlashMode.off}
                     reactivate={true}
                     permissionDialogMessage="Permissão para acessar a câmera"
-                    reactivateTimeout={10}
+                    reactivateTimeout={4000}
                     showMarker={true}
                     markerStyle={{borderColor:"#FFF", borderRadius:10}}
                     bottomContent={
