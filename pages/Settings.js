@@ -9,10 +9,14 @@ import {
   TouchableHighlight,
   Alert,
   Keyboard,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import * as firebase from 'firebase/app';
 import auth from 'firebase/auth';
 import database from 'firebase/database';
+
+var RNFS = require('react-native-fs')
 
 export default class Settings extends React.Component {
   constructor(props) {
@@ -23,16 +27,41 @@ export default class Settings extends React.Component {
     };
   }
 
-  saveInfo = async () => {
-    try{
-      await AsyncStorage.setItem("wifidata", JSON.stringify({wifi: this.state.ssid, pwd: this.state.wifipassword}));
-      Keyboard.dismiss();
-      Alert.alert("Sucesso", "Dado salvo com sucesso!");
-    }catch(e){
-      alert(e);
+  requestRunTimePermission=(ssid, wifipassword)=>{
+    async function externalStoragePermission() {
+      try{
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Gravar no dispositivo',
+            message: 'Gravar local',
+            buttonNegative: "Cancel",
+            buttonPositive: "OK",
+          }
+        );
+
+        if(granted === PermissionsAndroid.RESULTS.GRANTED){
+          var path = RNFS.DownloadDirectoryPath + "/wifiDados.json";
+          RNFS.writeFile(path, JSON.stringify({wfid: ssid, pwd: wifipassword}), 'utf8')
+          .then((success) => {
+            console.log('escrito e salvo');
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+        } else {
+          console.log("Permissão negada");
+        }     
+      } catch (err) {
+        Alert.alert('Write permission err', err);
+        console.warn(err);
+      }
+    }
+
+    if (Platform.OS === 'android'){
+      externalStoragePermission();
     }
   }
-
 
   saveDataFirebase = (ssid, wifipassword) => {
     firebase
@@ -43,7 +72,7 @@ export default class Settings extends React.Component {
         senhawifi: wifipassword,
       }).catch((error) => alert(error.message))
       .then(() => {
-        this.saveInfo();
+        this.requestRunTimePermission(ssid, wifipassword);
       });
   };
 
