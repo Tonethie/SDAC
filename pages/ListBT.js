@@ -1,12 +1,14 @@
 import React from 'react';
-import {Alert, Image, AsyncStorage ,View, Text} from 'react-native';
+import {Alert, Image ,View, Text} from 'react-native';
 import {Card, Title, Paragraph, Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as firebase from 'firebase/app';
 import auth from 'firebase/auth';
 import database from 'firebase/database';
-import BluetoothSerial from 'react-native-bluetooth-serial-next';
-import { connect} from 'react-native-bluetooth-serial-next';
+import BluetoothSerial from 'react-native-bluetooth-serial-next'
+
+var SendIntentAndroid = require("react-native-send-intent");
+var RNFS = require('react-native-fs')
 
 export default class ListBT extends React.Component {
   constructor(props) {
@@ -44,18 +46,21 @@ export default class ListBT extends React.Component {
     btRem.remove().catch((error) => alert(error.message));
   }
 
-  conectarBluetooth = async() =>{
-    //alert(this.state.mac)
-    const tvDevice = BluetoothSerial.device(this.state.mac);
-    await tvDevice.connect();
-    const conectado =  await BluetoothSerial.isConnected();
-    alert(conectado);
-    if (conectado) {
-      await tvDevice.read((data, subscription) => {
-        let ReadSubscription = subscription;
-        console.log("Data: ", data)
-      });
+  onShare = async () =>{
+    try{     
+      
+      await BluetoothSerial.pairDevice(this.state.mac);
+      setTimeout(this.SendWFDados, 10000)
+    }catch(error){
+      alert(error.message);
     }
+  };
+
+  SendWFDados = async () =>{
+    SendIntentAndroid.sendText({
+      text: "wifiDados",
+      type: SendIntentAndroid.TEXT_JSON,
+    });
   }
 
   render() {
@@ -72,7 +77,7 @@ export default class ListBT extends React.Component {
                   [
                     {
                       text: 'Sim',
-                      onPress: () => {this.setState({mac: item.mac}); this.conectarBluetooth();}
+                      onPress: () => {this.setState({mac: item.mac}); this.onShare();}
                     },
                     {
                       text: 'Cancelar',
@@ -91,7 +96,7 @@ export default class ListBT extends React.Component {
                     }}
                     style={{width: 30, height: 30}}
                   />
-                  <Text> {item.nome}</Text>
+                  <Text> {item.nome + " - " + item.mac}</Text>
                   <Button
                     style={{position: 'absolute', right: 0}}
                     icon={({black, size}) => (
@@ -127,11 +132,11 @@ export default class ListBT extends React.Component {
               key={index}
               onPress={() =>
                 Alert.alert('Configurar',
-                'Configurar Wifi - ' + item.nome + '?',
+                'Configurar Wifi - ' + item.nome + '?\n' + item.mac,
                 [
                   {
                     text: 'Sim',
-                    onPress: () => {this.setState({mac: item.mac}); this.conectarBluetooth();},
+                    onPress: () => {this.setState({mac: item.mac}); this.onShare();},
                   },
                   {
                     text: 'Cancelar',
